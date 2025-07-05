@@ -6,8 +6,7 @@ import { Bindings } from "./bindings";
 
 const app = new Hono<{ Bindings: Bindings }>();
 
-app.use(renderer);
-app.use(etag(), logger());
+app.use(etag(), renderer(), logger());
 
 app.get("/", (c) => {
   return c.render(
