@@ -6,12 +6,13 @@ import { Bindings } from "./bindings";
 
 const app = new Hono<{ Bindings: Bindings }>();
 
-app.use(etag(), renderer, logger());
+app.use(logger(), etag(), renderer);
 
 app.get("/", (c) => {
   return c.render(
     <>
-      <img src="./aleph.svg" alt="" />
+    <h1>henlo</h1>
+    <img src="./aleph.svg" alt="" />
     </>
   );
 });
