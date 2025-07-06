@@ -1,23 +1,31 @@
 import { Hono } from "hono";
 import { renderer } from "./renderer";
 import { etag } from "hono/etag";
-import { logger } from "hono/logger";
 import { Bindings } from "./bindings";
+import { prettyJSON } from "hono/pretty-json";
+import { canaanLogger } from "./log";
 
 const app = new Hono<{ Bindings: Bindings }>();
 
-app.use(logger(), etag(), renderer);
+app.use(etag(), prettyJSON(), renderer);
 
 app.get("/", (c) => {
   return c.render(
     <>
-    <h1>henlo</h1>
-    <img src="./aleph.svg" alt="" />
+      <body>
+        <h1>services</h1>
+        <a href="/health">health</a>
+        <a href="/artists">artists</a>
+      </body>
+      <footer>
+        <p>canaan API version 0.0.1</p>
+      </footer>
     </>
   );
 });
 
 app.get("/health", (c) => {
+  canaanLogger(`Health check initiated on ${new Date().toISOString()}`);
   return c.json({
     success: true,
     status: "healthy",
@@ -26,6 +34,7 @@ app.get("/health", (c) => {
 });
 
 app.notFound((c) => {
+  canaanLogger(`Route not found, ${new Date().toISOString()}`);
   return c.json(
     {
       success: false,
@@ -35,6 +44,11 @@ app.notFound((c) => {
   );
 });
 
-app.get("/artists");
+app.get("/artists", (c) => {
+  return c.json({
+    description: "list of artists to go here",
+    timestamp: new Date().toISOString(),
+  });
+});
 
 export default app;
