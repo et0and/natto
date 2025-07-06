@@ -15,6 +15,7 @@ app.get("/", (c) => {
       <body>
         <h1>services</h1>
         <a href="/health">health</a>
+        <br />
         <a href="/artists">artists</a>
       </body>
       <footer>
