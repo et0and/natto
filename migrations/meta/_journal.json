@@ -8,6 +8,13 @@
       "when": 1751701562774,
       "tag": "0000_odd_tigra",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1751795870952,
+      "tag": "0001_robust_dragon_lord",
+      "breakpoints": true
     }
   ]
 }
