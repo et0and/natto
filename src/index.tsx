@@ -4,6 +4,8 @@ import { etag } from "hono/etag";
 import { Bindings } from "./bindings";
 import { prettyJSON } from "hono/pretty-json";
 import { canaanLogger } from "./log";
+import { db, artistsTable } from "./db";
+import { eq } from "drizzle-orm";
 
 const app = new Hono<{ Bindings: Bindings }>();
 
@@ -45,11 +47,60 @@ app.notFound((c) => {
   );
 });
 
-app.get("/artists", (c) => {
-  return c.json({
-    description: "list of artists to go here",
-    timestamp: new Date().toISOString(),
-  });
+app.get("/artists", async (c) => {
+  try {
+    const artists = await db.select().from(artistsTable);
+
+    return c.json({
+      success: true,
+      data: artists,
+      count: artists.length,
+    });
+  } catch (error) {
+    canaanLogger(`Error fetching artists: ${error}`);
+    return c.json(
+      {
+        success: false,
+        error: "Failed to fetch artists",
+      },
+      500
+    );
+  }
+});
+
+// Get single artist by ID
+app.get("/artists/:id", async (c) => {
+  try {
+    const id = c.req.param("id");
+    const artist = await db
+      .select()
+      .from(artistsTable)
+      .where(eq(artistsTable.id, id));
+
+    if (artist.length === 0) {
+      return c.json(
+        {
+          success: false,
+          error: "Artist not found",
+        },
+        404
+      );
+    }
+
+    return c.json({
+      success: true,
+      data: artist[0],
+    });
+  } catch (error) {
+    canaanLogger(`Error fetching artist: ${error}`);
+    return c.json(
+      {
+        success: false,
+        error: "Failed to fetch artist",
+      },
+      500
+    );
+  }
 });
 
 export default app;
