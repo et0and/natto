@@ -4,7 +4,7 @@ import { etag } from "hono/etag";
 import { Bindings } from "./bindings";
 import { prettyJSON } from "hono/pretty-json";
 import { canaanLogger } from "./log";
-import { db, artistsTable } from "./db";
+import { createDb, artistsTable } from "./db";
 import { eq } from "drizzle-orm";
 
 const app = new Hono<{ Bindings: Bindings }>();
@@ -49,6 +49,8 @@ app.notFound((c) => {
 
 app.get("/artists", async (c) => {
   try {
+    // Create db connection using bindings
+    const db = createDb(c.env.DATABASE_URL, c.env.DATABASE_AUTH_TOKEN);
     const artists = await db.select().from(artistsTable);
 
     return c.json({
@@ -71,6 +73,8 @@ app.get("/artists", async (c) => {
 // Get single artist by ID
 app.get("/artists/:id", async (c) => {
   try {
+    // Create db connection using bindings
+    const db = createDb(c.env.DATABASE_URL, c.env.DATABASE_AUTH_TOKEN);
     const id = c.req.param("id");
     const artist = await db
       .select()
