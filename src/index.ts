@@ -1,5 +1,4 @@
 import { Hono } from "hono";
-import { renderer } from "./renderer";
 import { etag } from "hono/etag";
 import { Bindings } from "./bindings";
 import { prettyJSON } from "hono/pretty-json";
@@ -9,23 +8,12 @@ import { eq } from "drizzle-orm";
 
 const app = new Hono<{ Bindings: Bindings }>();
 
-app.use(etag(), prettyJSON(), renderer);
+app.use(etag(), prettyJSON());
 
-app.get("/", (c) => {
-  return c.render(
-    <>
-      <body>
-        <h1>services</h1>
-        <a href="/health">health</a>
-        <br />
-        <a href="/artists">artists</a>
-      </body>
-      <footer>
-        <p>canaan API version 0.0.1</p>
-      </footer>
-    </>
-  );
-});
+app.get('/', (c) => {
+  canaanLogger(`Redirecting to homepage`);
+  return c.redirect('https://tom.so')
+})
 
 app.get("/health", (c) => {
   canaanLogger(`Health check initiated on ${new Date().toISOString()}`);
