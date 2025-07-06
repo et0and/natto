@@ -1,15 +1,15 @@
 import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
 
 export const artistsTable = sqliteTable("artists", {
-  id: integer("id").primaryKey(),
-  parentId: integer("parent_id").notNull(),
-  name: text("name").notNull(),
-  termId: integer("term_id").notNull(),
+  id: text("id").primaryKey(),
+  parentId: text("parent_id"),
+  name: text("name"),
+  termId: text("term_id"),
+  contributorId: text("contributor_id"),
   fullName: text("full_name"),
-  contributorId: text("contributor_id").notNull(),
-  artistType: text("artist_type"),
+  type: text("type"),
+  nationalityCode: text("nationality_code"),
   description: text("description"),
-  country: text("country").notNull(),
 });
 
 export type InsertArtist = typeof artistsTable.$inferInsert;
