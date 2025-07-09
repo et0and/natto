@@ -1,14 +1,14 @@
 import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
 
 export const artistsTable = sqliteTable("artists", {
-  id: text("id").primaryKey(),
-  parentId: text("parent_id"),
+  id: text("id"),
+  parentId: text("parentId"),
   name: text("name"),
-  termId: text("term_id"),
-  contributorId: text("contributor_id"),
-  fullName: text("full_name"),
+  termId: text("termId"),
+  contributorId: text("contributorId"),
+  fullName: text("fullName"),
   type: text("type"),
-  nationalityCode: text("nationality_code"),
+  nationalityCode: text("nationalityCode"),
   description: text("description"),
 });
 
