@@ -3,6 +3,5 @@
   "name": "canaan",
   "compatibility_date": "2024-04-01",
   "main": "./src/index.tsx",
-  "assets": { "directory": "public"},
   "observability": { "enabled": true }
 }
