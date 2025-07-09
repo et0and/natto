@@ -14,16 +14,6 @@ app.use(etag(), prettyJSON(), renderer);
 app.get("/", (c) => {
   return c.redirect("https://tom.so");
 });
-import { eq } from "drizzle-orm";
-
-const app = new Hono<{ Bindings: Bindings }>();
-
-app.use(etag(), prettyJSON());
-
-app.get('/', (c) => {
-  canaanLogger(`Redirecting to homepage`);
-  return c.redirect('https://tom.so')
-})
 
 app.get("/health", (c) => {
   canaanLogger(`Health check initiated on ${new Date().toISOString()}`);
@@ -49,7 +39,7 @@ app.get("/artists", async (c) => {
   try {
     // Create db connection using bindings
     const db = createDb(c.env.DATABASE_URL, c.env.DATABASE_AUTH_TOKEN);
-
+    
     // Get pagination parameters
     const page = parseInt(c.req.query("page") || "1");
     const limit = parseInt(c.req.query("limit") || "20");
@@ -120,16 +110,8 @@ app.get("/artists", async (c) => {
     const totalResult = await totalQuery;
     const total = Number(totalResult[0].count);
 
-    // Get paginated and filtered artists
-    const artistsQuery = db.select().from(artistsTable);
-    if (whereClause) {
-      artistsQuery.where(whereClause);
-    }
-    const artists = await artistsQuery
-      .orderBy(orderBy)
-      .limit(limit)
-      .offset(offset);
-
+    // Query the artists data with proper pagination
+    const artists = await db.all(sql`SELECT id, parentId, name, termId, contributorId, fullName, type, nationalityCode, description FROM artists LIMIT ${limit}`);
 
     return c.json({
       success: true,
