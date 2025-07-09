@@ -54,17 +54,15 @@ app.get("/artists", async (c) => {
 
     // Build where conditions
     const conditions: SQL[] = [];
-    
+
     if (nameSearch) {
-      conditions.push(
-        like(artistsTable.name, `%${nameSearch}%`)
-      );
+      conditions.push(like(artistsTable.name, `%${nameSearch}%`));
     }
-    
+
     if (typeFilter) {
       conditions.push(eq(artistsTable.type, typeFilter));
     }
-    
+
     if (nationalityFilter) {
       conditions.push(eq(artistsTable.nationalityCode, nationalityFilter));
     }
@@ -73,20 +71,34 @@ app.get("/artists", async (c) => {
     const whereClause = conditions.length > 0 ? and(...conditions) : undefined;
 
     // Build order by clause
-    const validSortFields = ["name", "type", "nationalityCode", "fullName"] as const;
-    type ValidSortField = typeof validSortFields[number];
-    const sortField: ValidSortField = validSortFields.includes(sortBy as ValidSortField) ? sortBy as ValidSortField : "name";
-    
+    const validSortFields = [
+      "name",
+      "type",
+      "nationalityCode",
+      "fullName",
+    ] as const;
+    type ValidSortField = (typeof validSortFields)[number];
+    const sortField: ValidSortField = validSortFields.includes(
+      sortBy as ValidSortField
+    )
+      ? (sortBy as ValidSortField)
+      : "name";
+
     const getSortColumn = (field: ValidSortField) => {
       switch (field) {
-        case "name": return artistsTable.name;
-        case "type": return artistsTable.type;
-        case "nationalityCode": return artistsTable.nationalityCode;
-        case "fullName": return artistsTable.fullName;
-        default: return artistsTable.name;
+        case "name":
+          return artistsTable.name;
+        case "type":
+          return artistsTable.type;
+        case "nationalityCode":
+          return artistsTable.nationalityCode;
+        case "fullName":
+          return artistsTable.fullName;
+        default:
+          return artistsTable.name;
       }
     };
-    
+
     const sortColumn = getSortColumn(sortField);
     const orderBy = sortOrder === "desc" ? desc(sortColumn) : asc(sortColumn);
 
