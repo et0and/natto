@@ -2,7 +2,7 @@
   "name": "canaan",
   "type": "module",
   "scripts": {
-    "dev": "wrangler dev --local --var DATABASE_URL:$(grep DATABASE_URL .env.local | cut -d '=' -f2) --var DATABASE_AUTH_TOKEN:$(grep DATABASE_AUTH_TOKEN .env.local | cut -d '=' -f2)",
+    "dev": "wrangler dev --local",
     "build": "vite build",
     "preview": "$npm_execpath run build && vite preview",
     "deploy": "$npm_execpath run build && wrangler deploy",

@@ -8,7 +8,7 @@ export function createDb(databaseUrl: string, authToken: string) {
     authToken: authToken,
   });
 
-  return drizzle(client, { schema: { artistsTable } });
+  return drizzle(client);
 }
 
 export type DbClient = ReturnType<typeof createDb>;
