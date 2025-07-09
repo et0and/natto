@@ -8,8 +8,8 @@ export default defineConfig(({ mode }) => {
   return {
     plugins: [cloudflare(), ssrPlugin()],
     define: {
-      "process.env.DATABASE_URL": JSON.stringify(env.DATABASE_URL),
-      "process.env.DATABASE_AUTH_TOKEN": JSON.stringify(
+      "c.env.DATABASE_URL": JSON.stringify(env.DATABASE_URL),
+      "c.env.DATABASE_AUTH_TOKEN": JSON.stringify(
         env.DATABASE_AUTH_TOKEN
       ),
     },

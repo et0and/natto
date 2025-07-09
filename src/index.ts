@@ -14,6 +14,16 @@ app.use(etag(), prettyJSON(), renderer);
 app.get("/", (c) => {
   return c.redirect("https://tom.so");
 });
+import { eq } from "drizzle-orm";
+
+const app = new Hono<{ Bindings: Bindings }>();
+
+app.use(etag(), prettyJSON());
+
+app.get('/', (c) => {
+  canaanLogger(`Redirecting to homepage`);
+  return c.redirect('https://tom.so')
+})
 
 app.get("/health", (c) => {
   canaanLogger(`Health check initiated on ${new Date().toISOString()}`);
@@ -119,6 +129,7 @@ app.get("/artists", async (c) => {
       .orderBy(orderBy)
       .limit(limit)
       .offset(offset);
+
 
     return c.json({
       success: true,
