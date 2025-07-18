@@ -1,5 +1,4 @@
 import { Hono } from "hono";
-import { renderer } from "./renderer";
 import { etag } from "hono/etag";
 import { Bindings } from "./bindings";
 import { prettyJSON } from "hono/pretty-json";
@@ -8,7 +7,7 @@ import { artists } from "./artists";
 
 const app = new Hono<{ Bindings: Bindings }>();
 
-app.use(etag(), prettyJSON(), renderer);
+app.use(etag(), prettyJSON());
 
 app.get("/", (c) => {
   return c.redirect("https://tom.so");
