@@ -23,6 +23,8 @@ This project contains information from the J. Paul Getty Trust, Getty Research I
 
 For more information about the Getty Vocabularies and their licensing, visit the [Getty Research Institute Download Center](https://www.getty.edu/research/tools/vocabularies/obtain.html).
 
+Besides the data, the source code of this project is [GPL licensed](/LICENSE).
+
 ## API endpoints
 
 ### Health check
