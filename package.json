@@ -10,6 +10,8 @@
     "preview": "$npm_execpath run build && vite preview",
     "deploy": "$npm_execpath run build && wrangler deploy",
     "cf-typegen": "wrangler types --env-interface CloudflareBindings",
+    "lint": "oxlint src/",
+    "test": "vitest",
     "release": "semantic-release"
   },
   "dependencies": {
@@ -27,9 +29,12 @@
     "@semantic-release/github": "^11.0.3",
     "@semantic-release/npm": "^12.0.2",
     "@semantic-release/release-notes-generator": "^14.0.3",
+    "@vitest/ui": "^3.2.4",
+    "oxlint": "^1.7.0",
     "semantic-release": "^24.2.7",
     "vite": "^6.3.5",
     "vite-ssr-components": "^0.3.0",
+    "vitest": "^3.2.4",
     "wrangler": "^4.17.0"
   }
 }

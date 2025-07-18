@@ -1,4 +1,4 @@
-import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
+import { sqliteTable, text } from "drizzle-orm/sqlite-core";
 
 export const artistsTable = sqliteTable("artists", {
   id: text("id").primaryKey().notNull(),
