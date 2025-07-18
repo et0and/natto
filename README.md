@@ -1,6 +1,6 @@
 ![Natto hero](/natto.png)
 
-# Natto (formerly Artists from Asia)
+# 🫘 Natto (formerly Artists from Asia)
 
 **Natto** is a specialised API service that provides comprehensive access to Asian artists from around the world, sourced from the [Getty Research Institute's Union List of Artist Names® (ULAN) database](https://www.getty.edu/research/tools/vocabularies/ulan). Rather than mirroring the existing database, this service focuses exclusively on artists from all regions of Asia, including Central, North, South, West, East, and Southeast Asia over fewer data fields for simplicity.
 
