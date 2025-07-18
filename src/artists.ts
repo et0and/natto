@@ -75,35 +75,40 @@ artists.get("/", async (c) => {
     const orderBy = sortOrder === "desc" ? desc(sortColumn) : asc(sortColumn);
 
     // Get total count for pagination info (with filters applied)
-    const totalQuery = db.select({ count: sql`count(*)` }).from(artistsTable);
+    let totalResult;
     if (whereClause) {
-      totalQuery.where(whereClause);
+      totalResult = await db
+        .select({ count: sql`count(*)` })
+        .from(artistsTable)
+        .where(whereClause);
+    } else {
+      totalResult = await db
+        .select({ count: sql`count(*)` })
+        .from(artistsTable);
     }
-    const totalResult = await totalQuery;
     const total = Number(totalResult[0].count);
 
     // Query the artists data with proper pagination
-    let query = db
-      .select({
-        id: artistsTable.id,
-        parentId: artistsTable.parentId,
-        name: artistsTable.name,
-        termId: artistsTable.termId,
-        contributorId: artistsTable.contributorId,
-        fullName: artistsTable.fullName,
-        type: artistsTable.type,
-        nationalityCode: artistsTable.nationalityCode,
-        description: artistsTable.description,
-      })
-      .from(artistsTable);
+    let artists;
 
-    // Apply filters if they exist
     if (whereClause) {
-      query = query.where(whereClause) as typeof query;
+      // Query with filters
+      artists = await db
+        .select()
+        .from(artistsTable)
+        .where(whereClause)
+        .orderBy(orderBy)
+        .limit(limit)
+        .offset(offset);
+    } else {
+      // Query without filters
+      artists = await db
+        .select()
+        .from(artistsTable)
+        .orderBy(orderBy)
+        .limit(limit)
+        .offset(offset);
     }
-
-    // Apply sorting and pagination
-    const artists = await query.orderBy(orderBy).limit(limit).offset(offset);
 
     return c.json({
       success: true,
