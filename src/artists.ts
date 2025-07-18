@@ -22,7 +22,6 @@ artists.get("/", async (c) => {
     const typeFilter = c.req.query("type");
     const nationalityFilter = c.req.query("nationalityCode");
 
-
     // Build where conditions
     const conditions: SQL[] = [];
 
@@ -41,8 +40,6 @@ artists.get("/", async (c) => {
     // Build where clause
     const whereClause = conditions.length > 0 ? and(...conditions) : undefined;
 
-
-
     // Get total count for pagination info (with filters applied)
     let totalResult;
     if (whereClause) {
@@ -58,15 +55,14 @@ artists.get("/", async (c) => {
     const total = Number(totalResult[0].count);
 
     // Query the artists data with proper pagination
-    let query = db.select().from(artistsTable);
-    
-    if (whereClause) {
-      query = query.where(whereClause);
-    }
-    
-    const artists = await query
-      .limit(limit)
-      .offset(offset);
+    const artists = whereClause
+      ? await db
+          .select()
+          .from(artistsTable)
+          .where(whereClause)
+          .limit(limit)
+          .offset(offset)
+      : await db.select().from(artistsTable).limit(limit).offset(offset);
 
     return c.json({
       success: true,
@@ -139,14 +135,14 @@ artists.get("/test/simple", async (c) => {
   try {
     const db = createDb(c.env.DATABASE_URL, c.env.DATABASE_AUTH_TOKEN);
     const result = await db.select().from(artistsTable).limit(3);
-    
+
     return c.json({
       success: true,
       simple_test: true,
-      data: result
+      data: result,
     });
   } catch (error) {
-    return c.json({ success: false, error: error.toString() }, 500);
+    return c.json({ success: false, error: error }, 500);
   }
 });
 
