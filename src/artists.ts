@@ -2,7 +2,7 @@ import { Hono } from "hono";
 import { Bindings } from "./bindings";
 import { canaanLogger } from "./log";
 import { createDb, artistsTable } from "./db";
-import { eq, sql, like, and, asc, desc, SQL } from "drizzle-orm";
+import { eq, sql, like, and, SQL } from "drizzle-orm";
 
 const artists = new Hono<{ Bindings: Bindings }>();
 
@@ -21,8 +21,7 @@ artists.get("/", async (c) => {
     const nameSearch = c.req.query("name");
     const typeFilter = c.req.query("type");
     const nationalityFilter = c.req.query("nationalityCode");
-    const sortBy = c.req.query("sort") || "name"; // default sort by name
-    const sortOrder = c.req.query("order") || "asc"; // default ascending
+
 
     // Build where conditions
     const conditions: SQL[] = [];
@@ -42,37 +41,7 @@ artists.get("/", async (c) => {
     // Build where clause
     const whereClause = conditions.length > 0 ? and(...conditions) : undefined;
 
-    // Build order by clause
-    const validSortFields = [
-      "name",
-      "type",
-      "nationalityCode",
-      "fullName",
-    ] as const;
-    type ValidSortField = (typeof validSortFields)[number];
-    const sortField: ValidSortField = validSortFields.includes(
-      sortBy as ValidSortField
-    )
-      ? (sortBy as ValidSortField)
-      : "name";
 
-    const getSortColumn = (field: ValidSortField) => {
-      switch (field) {
-        case "name":
-          return artistsTable.name;
-        case "type":
-          return artistsTable.type;
-        case "nationalityCode":
-          return artistsTable.nationalityCode;
-        case "fullName":
-          return artistsTable.fullName;
-        default:
-          return artistsTable.name;
-      }
-    };
-
-    const sortColumn = getSortColumn(sortField);
-    const orderBy = sortOrder === "desc" ? desc(sortColumn) : asc(sortColumn);
 
     // Get total count for pagination info (with filters applied)
     let totalResult;
@@ -89,26 +58,15 @@ artists.get("/", async (c) => {
     const total = Number(totalResult[0].count);
 
     // Query the artists data with proper pagination
-    let artists;
-
+    let query = db.select().from(artistsTable);
+    
     if (whereClause) {
-      // Query with filters
-      artists = await db
-        .select()
-        .from(artistsTable)
-        .where(whereClause)
-        .orderBy(orderBy)
-        .limit(limit)
-        .offset(offset);
-    } else {
-      // Query without filters
-      artists = await db
-        .select()
-        .from(artistsTable)
-        .orderBy(orderBy)
-        .limit(limit)
-        .offset(offset);
+      query = query.where(whereClause);
     }
+    
+    const artists = await query
+      .limit(limit)
+      .offset(offset);
 
     return c.json({
       success: true,
@@ -125,8 +83,6 @@ artists.get("/", async (c) => {
         name: nameSearch,
         type: typeFilter,
         nationalityCode: nationalityFilter,
-        sort: sortField,
-        order: sortOrder,
       },
     });
   } catch (error) {
@@ -175,6 +131,22 @@ artists.get("/:id", async (c) => {
       },
       500
     );
+  }
+});
+
+// Simple test endpoint without any complex logic
+artists.get("/test/simple", async (c) => {
+  try {
+    const db = createDb(c.env.DATABASE_URL, c.env.DATABASE_AUTH_TOKEN);
+    const result = await db.select().from(artistsTable).limit(3);
+    
+    return c.json({
+      success: true,
+      simple_test: true,
+      data: result
+    });
+  } catch (error) {
+    return c.json({ success: false, error: error.toString() }, 500);
   }
 });
 

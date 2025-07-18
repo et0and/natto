@@ -1,9 +1,9 @@
 import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
 
 export const artistsTable = sqliteTable("artists", {
-  id: text("id"),
+  id: text("id").primaryKey().notNull(),
   parentId: text("parentId"),
-  name: text("name"),
+  name: text("name").notNull(),
   termId: text("termId"),
   contributorId: text("contributorId"),
   fullName: text("fullName"),
