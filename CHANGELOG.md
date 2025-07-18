@@ -1,3 +1,10 @@
+## [1.0.1](https://github.com/et0and/canaan/compare/v1.0.0...v1.0.1) (2025-07-18)
+
+
+### Bug Fixes
+
+* update version to 1.0.0 and refine .gitignore and .releaserc.json configurations ([31d576b](https://github.com/et0and/canaan/commit/31d576b6447bc77914e335f3da7bbc40243b8692))
+
 # 1.0.0 (2025-07-18)
 
 
