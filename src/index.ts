@@ -4,6 +4,7 @@ import { Bindings } from "./bindings";
 import { prettyJSON } from "hono/pretty-json";
 import { canaanLogger } from "./log";
 import { artists } from "./artists";
+import { galleries } from "./galleries";
 
 const app = new Hono<{ Bindings: Bindings }>();
 
@@ -22,7 +23,9 @@ app.get("/health", (c) => {
   });
 });
 
+// Routes
 app.route("/artists", artists);
+app.route("/galleries", galleries);
 
 app.notFound((c) => {
   canaanLogger(`Route not found, ${new Date().toISOString()}`);
@@ -31,7 +34,7 @@ app.notFound((c) => {
       success: false,
       error: "Sorry, route not found",
     },
-    404
+    404,
   );
 });
 

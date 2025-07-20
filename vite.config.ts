@@ -12,9 +12,6 @@ export default defineConfig(({ mode }) => {
         formats: ["es"],
         fileName: "index",
       },
-      rollupOptions: {
-        external: ["hono", "@libsql/client", "drizzle-orm"],
-      },
     },
     define: {
       "c.env.DATABASE_URL": JSON.stringify(env.DATABASE_URL),
