@@ -1,12 +1,17 @@
 ![Natto hero](/natto.png)
 
-# 🫘 Natto (formerly Artists from Asia)
+# 🫘 Natto - a hobby API service
 
-**Natto** is a specialised API service that provides comprehensive access to Asian artists from around the world, sourced from the [Getty Research Institute's Union List of Artist Names® (ULAN) database](https://www.getty.edu/research/tools/vocabularies/ulan). Rather than mirroring the existing database, this service focuses exclusively on artists from all regions of Asia, including Central, North, South, West, East, and Southeast Asia over fewer data fields for simplicity.
+**Natto** is a multi-purpose hobby API service that provides access to various personal interests and collections. It mainly focuses on Asian artists from the [Getty Research Institute's Union List of Artist Names® (ULAN) database](https://www.getty.edu/research/tools/vocabularies/ulan), but also includes multiple API endpoints covering different personal interests including a directory of art galleries in Aotearoa, my books, Tomica car collections et al.
+
+I'm using this project to learn more about [Hono](https://hono.dev/) and what it is capable of just as a bit of fun!
 
 ## About the data
 
-The artist data in Natto is derived from the ULAN database, which contains authoritative information about artists and their biographical details. The data includes:
+Natto contains multiple datasets across different domains:
+
+### Artists from Asia
+The artist data is derived from the ULAN database, which contains authoritative information about artists and their biographical details. The data includes:
 
 - Artist names and full names
 - Nationality codes and geographic origins
@@ -17,13 +22,29 @@ The artist data in Natto is derived from the ULAN database, which contains autho
 
 Currently it contains over a million records stored in a single SQLite database, with more being added over time.
 
+### Galleries
+Gallery data includes information about art galleries and exhibition spaces:
+
+- Gallery names and descriptions
+- Physical addresses and contact information
+- Geographic coordinates (latitude/longitude)
+- Associated artists
+- Opening year and operational status
+- Website and email contact details
+
+### Planned Collections
+Additional datasets are planned for:
+
+- **Books**: Personal book collection with titles, authors, genres, and descriptions
+- **Cars**: Tomica die-cast car collection with models, brands, years, and colours
+
 ### Attribution and thanks
 
 This project contains information from the J. Paul Getty Trust, Getty Research Institute, the Union List of Artist Names, which is made available under the ODC Attribution License. The Getty Vocabulary data is compiled from various contributors using published sources; the contributor and sources are available as part of each record.
 
 For more information about the Getty Vocabularies and their licensing, visit the [Getty Research Institute Download Center](https://www.getty.edu/research/tools/vocabularies/obtain.html).
 
-Besides the data, the source code of this project is [GPL licensed](/LICENSE).
+Besides the data, the source code of this project is [GPLv3 licensed](/LICENSE).
 
 ## API endpoints
 
@@ -127,19 +148,118 @@ GET /artists/500115493
 }
 ```
 
-## Schema
+### Galleries
 
-The artists are stored with the following structure:
+#### Get all galleries (paginated response)
 
-- `id` (primary key) - Unique artist identifier
-- `parentId` - Reference to parent artist (for hierarchical relationships)
-- `name` - Artist's primary name
-- `termId` - Getty vocabulary term identifier
-- `contributorId` - Data contributor identifier
-- `fullName` - Complete artist name
-- `type` - Artist classification (painter, sculptor, etc.)
-- `nationalityCode` - ISO country/nationality code
-- `description` - Biographical description
+- **GET** `/galleries` - Retrieve a paginated list of galleries with optional filtering
+
+**Query parameters:**
+
+- `page` (integer, default: 1) - Page number for pagination
+- `limit` (integer, default: 20) - Number of results per page
+- `name` (string) - Search galleries by name (partial match)
+- `address` (string) - Filter by exact address match
+
+**Example requests:**
+
+```bash
+# Get first page of galleries
+GET /galleries
+
+# Search for galleries with "modern" in their name
+GET /galleries?name=modern
+
+# Get galleries at a specific address
+GET /galleries?address=123 Art Street
+
+# Combined filters with pagination
+GET /galleries?name=gallery&page=2&limit=5
+```
+
+**Response:**
+
+```json
+{
+  "success": true,
+  "data": [
+    {
+      "id": "gallery_id",
+      "name": "Gallery Name",
+      "description": "Gallery description",
+      "address": "123 Art Street, City",
+      "website": "https://gallery.com",
+      "email": "info@gallery.com",
+      "artists": "associated_artists",
+      "latitude": "40.7128",
+      "longitude": "-74.0060",
+      "status": 1,
+      "opened": 1995,
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "updatedAt": "2024-01-01T00:00:00.000Z"
+    }
+  ],
+  "pagination": {
+    "page": 1,
+    "limit": 20,
+    "total": 150,
+    "totalPages": 8,
+    "hasNext": true,
+    "hasPrev": false
+  },
+  "filters": {
+    "name": "search_term",
+    "type": "address_filter"
+  }
+}
+```
+
+#### Get single gallery
+
+- **GET** `/galleries/:id` - Retrieve a specific gallery by ID
+
+**Example request:**
+
+```bash
+GET /galleries/gallery_123
+```
+
+**Response:**
+
+```json
+{
+  "success": true,
+  "data": {
+    "id": "gallery_123",
+    "name": "Modern Art Gallery",
+    "description": "Contemporary art space featuring emerging artists",
+    "address": "456 Culture Ave, Art District",
+    "website": "https://modernartgallery.com",
+    "email": "contact@modernartgallery.com",
+    "artists": "artist1,artist2,artist3",
+    "latitude": "40.7589",
+    "longitude": "-73.9851",
+    "status": 1,
+    "opened": 2010,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2024-01-01T00:00:00.000Z"
+  }
+}
+```
+
+### Planned API Routes
+
+The following API endpoints are planned for future implementation:
+
+#### Books
+- **GET** `/books` - Retrieve paginated book collection
+- **GET** `/books/:id` - Get specific book details
+- Query parameters: `title`, `author`, `genre`, `year`
+
+#### Cars (Personal Tomica collection)
+- **GET** `/cars` - Retrieve paginated car collection
+- **GET** `/cars/:id` - Get specific car details
+- Query parameters: `model`, `brand`, `year`, `colour`
 
 ## Stack
 
@@ -197,3 +317,4 @@ Required environment variables:
 
 - `DATABASE_URL` - LibSQL database connection URL
 - `DATABASE_AUTH_TOKEN` - Database authentication token
+- `CLOUDFLARE_API_TOKEN` - Cloudflare API token for deployment (if not using `wrangler login`)
