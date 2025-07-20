@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/et0and/natto/compare/v1.1.0...v1.2.0) (2025-07-20)
+
+
+### Features
+
+* cf types, kv rate limit store ([3f85d7d](https://github.com/et0and/natto/commit/3f85d7de99c05f58afa7b43352eb075bf9637352))
+
 # [1.1.0](https://github.com/et0and/natto/compare/v1.0.1...v1.1.0) (2025-07-20)
 
 
