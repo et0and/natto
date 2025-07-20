@@ -5,10 +5,16 @@ import { prettyJSON } from "hono/pretty-json";
 import { canaanLogger } from "./log";
 import { artists } from "./artists";
 import { galleries } from "./galleries";
+import { rateLimiter } from "./rate-limiter";
 
 const app = new Hono<{ Bindings: Bindings }>();
 
 app.use(etag(), prettyJSON());
+
+app.use(rateLimiter({
+  windowMs: 60 * 1000,
+  maxRequests: 100,
+}));
 
 app.get("/", (c) => {
   return c.redirect("https://tom.so");

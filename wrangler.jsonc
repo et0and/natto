@@ -3,5 +3,12 @@
   "name": "natto",
   "compatibility_date": "2024-04-01",
   "main": "./src/index.ts",
-  "observability": { "enabled": true }
+  "observability": { "enabled": true },
+  "kv_namespaces": [
+    {
+      "binding": "RATE_LIMITER",
+      "id": "154360816e614271a360281dd5e4e1a8",
+      "preview_id": "cbefd48544c742748f51615166aebacb",
+    },
+  ],
 }
