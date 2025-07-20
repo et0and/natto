@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/et0and/natto/compare/v1.0.1...v1.1.0) (2025-07-20)
+
+
+### Features
+
+* add new tables to support some routes for fun, fix Wrangler issue ([80fc628](https://github.com/et0and/natto/commit/80fc628c2a3975424174d4cfc379c31d2950d1a3))
+
 ## [1.0.1](https://github.com/et0and/canaan/compare/v1.0.0...v1.0.1) (2025-07-18)
 
 
