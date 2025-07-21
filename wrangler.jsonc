@@ -11,4 +11,7 @@
       "preview_id": "cbefd48544c742748f51615166aebacb",
     },
   ],
+  "triggers": {
+    "crons": ["0 0 1 * *"]
+  },
 }
