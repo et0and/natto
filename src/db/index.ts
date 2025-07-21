@@ -1,6 +1,6 @@
 import { drizzle } from "drizzle-orm/libsql";
 import { createClient } from "@libsql/client";
-import { artistsTable, galleriesTable, bookTable, tomicaTable } from "./schema";
+import { artistsTable, galleriesTable, bookTable, tomicaTable, schoolsTable } from "./schema";
 
 export function createDb(databaseUrl: string, authToken: string) {
   const client = createClient({
@@ -13,4 +13,4 @@ export function createDb(databaseUrl: string, authToken: string) {
 
 export type DbClient = ReturnType<typeof createDb>;
 
-export { artistsTable, galleriesTable, bookTable, tomicaTable };
+export { artistsTable, galleriesTable, bookTable, tomicaTable, schoolsTable };
