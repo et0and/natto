@@ -51,6 +51,9 @@ app.notFound((c) => {
   );
 });
 
+// Export app instance for testing
+export { app };
+
 // Scheduled function for monthly school data snapshots
 export default {
   fetch: app.fetch,
