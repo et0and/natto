@@ -1,4 +1,4 @@
-![Natto hero](/natto.png)
+![Natto hero](natto.png)
 
 # 🫘 Natto - a hobby API service
 
