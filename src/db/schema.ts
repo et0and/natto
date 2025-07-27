@@ -60,5 +60,32 @@ export type SelectCar = typeof tomicaTable.$inferSelect;
 export type Gallery = typeof galleriesTable.$inferSelect;
 export type NewGallery = typeof galleriesTable.$inferInsert;
 
+export const schoolsTable = sqliteTable("schools", {
+  id: text("id").primaryKey().notNull(),
+  name: text("name").notNull(),
+  type: text("type"),
+  region: text("region"),
+  address: text("address"),
+  website: text("website"),
+  email: text("email"),
+  phone: text("phone"),
+  principal: text("principal"),
+  roll: integer("roll"),
+  decile: integer("decile"),
+  latitude: text("latitude"),
+  longitude: text("longitude"),
+  status: integer("status").notNull().default(1),
+  snapshotDate: integer("snapshot_date", { mode: "timestamp" }).notNull(),
+  createdAt: integer("created_at", { mode: "timestamp" })
+    .notNull()
+    .$defaultFn(() => new Date()),
+  updatedAt: integer("updated_at", { mode: "timestamp" })
+    .notNull()
+    .$defaultFn(() => new Date()),
+});
+
 export type InsertBook = typeof bookTable.$inferInsert;
 export type SelectBook = typeof bookTable.$inferSelect;
+
+export type School = typeof schoolsTable.$inferSelect;
+export type NewSchool = typeof schoolsTable.$inferInsert;
