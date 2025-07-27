@@ -1,3 +1,10 @@
+# [1.3.0](https://github.com/et0and/natto/compare/v1.2.0...v1.3.0) (2025-07-27)
+
+
+### Features
+
+* mirror to sourcehut ([d9f4323](https://github.com/et0and/natto/commit/d9f43236f4ecc821c7f9ad899f0fcc3a864fb901))
+
 # [1.2.0](https://github.com/et0and/natto/compare/v1.1.0...v1.2.0) (2025-07-20)
 
 
