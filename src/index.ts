@@ -6,15 +6,18 @@ import { canaanLogger } from "./log";
 import { artists } from "./artists";
 import { galleries } from "./galleries";
 import { rateLimiter } from "./rate-limiter";
+import { properties } from "./property";
 
 const app = new Hono<{ Bindings: Bindings }>();
 
 app.use(etag(), prettyJSON());
 
-app.use(rateLimiter({
-  windowMs: 60 * 1000,
-  maxRequests: 100,
-}));
+app.use(
+  rateLimiter({
+    windowMs: 60 * 1000,
+    maxRequests: 100,
+  })
+);
 
 app.get("/", (c) => {
   return c.redirect("https://tom.so");
@@ -32,6 +35,7 @@ app.get("/health", (c) => {
 // Routes
 app.route("/artists", artists);
 app.route("/galleries", galleries);
+app.route("/properties", properties);
 
 app.notFound((c) => {
   canaanLogger(`Route not found, ${new Date().toISOString()}`);
@@ -40,7 +44,7 @@ app.notFound((c) => {
       success: false,
       error: "Sorry, route not found",
     },
-    404,
+    404
   );
 });
 
